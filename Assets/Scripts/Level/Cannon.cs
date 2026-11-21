@@ -33,7 +33,7 @@ public class Cannon : MonoBehaviour
             return;
         }
 
-        Vector2 direction = player.position - muzzle.position;
+        Vector2 direction = (player.position - muzzle.position).normalized;
 
         var cannonball = Instantiate(cannonballPrefab,
             muzzle.position,
