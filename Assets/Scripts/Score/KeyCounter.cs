@@ -6,6 +6,11 @@ public class KeyCounter : MonoBehaviour
 
     void Start()
     {
+        
+    }
+
+    void OnEnable()
+    {
         GameEvents.OnTargetDestroyed += TargetDestroyedHandler;
     }
 
