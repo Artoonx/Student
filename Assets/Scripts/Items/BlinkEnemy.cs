@@ -21,9 +21,9 @@ public class BlinkEnemy : MonoBehaviour, IDamagable
 
         for (int i = 0; i < blinkTimes; i++)
         {
-            gameObject.SetActive(false);
+           spriteRenderer.enabled = false;
             yield return new WaitForSeconds(blinkWait);
-            gameObject.SetActive(true);
+            spriteRenderer.enabled = true;
             yield return new WaitForSeconds(blinkWait);
         }
 
