@@ -33,7 +33,7 @@ public class ScoreManager : MonoBehaviour
 
     void AddScore(GameItem gameItem)
     {
-        int value = itemValuesDictionary[gameItem];
+        int value = itemValuesDictionary[GameItem.Gem];
         score += value;
         Debug.Log($"Puntaje: {score}");
     }
