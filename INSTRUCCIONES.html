@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba 2 recuperativa — Programación III</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --text: #1d2330;
+    --muted: #5b6475;
+    --border: #dfe3ea;
+    --accent: #2f6fdb;
+    --code-bg: #eef1f6;
+    --quote-bg: #f3f6fc;
+    --fix: #c2410c;
+    --fix-bg: #fff1e8;
+    --complete: #0f766e;
+    --complete-bg: #e6f6f3;
+    --create: #6d28d9;
+    --create-bg: #f1ebff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171d;
+      --card: #1c2028;
+      --text: #e6e9ef;
+      --muted: #9aa3b2;
+      --border: #2d333e;
+      --accent: #7aa7ff;
+      --code-bg: #262b35;
+      --quote-bg: #212734;
+      --fix: #fb923c;
+      --fix-bg: #3a2416;
+      --complete: #5eead4;
+      --complete-bg: #12302c;
+      --create: #c4b5fd;
+      --create-bg: #2a2142;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 2rem; margin: 0 0 4px; }
+  h2 { font-size: 1.35rem; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.15rem; margin: 0; }
+  p { margin: 8px 0; }
+  .subtitle { color: var(--muted); margin: 0 0 20px; }
+  .intro { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
+  nav.toc a {
+    text-decoration: none; color: var(--accent); background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 0.9rem;
+  }
+  nav.toc a:hover { border-color: var(--accent); }
+  ul { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+    font-size: 0.9em; background: var(--code-bg); border-radius: 4px; padding: 1px 5px;
+  }
+  pre {
+    background: var(--code-bg); border-radius: 8px; padding: 12px 14px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace; font-size: 0.88rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 0.9rem; }
+  tr:last-child td { border-bottom: none; }
+  .important {
+    border-left: 4px solid var(--fix); background: var(--fix-bg); border-radius: 6px; padding: 10px 14px; margin: 12px 0;
+  }
+  .task {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin: 16px 0; scroll-margin-top: 16px;
+  }
+  .task-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .task-head .points { margin-left: auto; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .badge { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 6px; padding: 2px 8px; }
+  .badge.fix { color: var(--fix); background: var(--fix-bg); }
+  .badge.complete { color: var(--complete); background: var(--complete-bg); }
+  .badge.create { color: var(--create); background: var(--create-bg); }
+  .meta { color: var(--muted); font-size: 0.95rem; margin: 6px 0 10px; }
+  blockquote {
+    margin: 10px 0; padding: 10px 14px; background: var(--quote-bg);
+    border-left: 4px solid var(--accent); border-radius: 6px; font-style: italic;
+  }
+  .label { font-weight: 700; }
+  .total { margin-top: 32px; font-weight: 600; }
+  @media print {
+    body { background: #fff; color: #000; }
+    .task, .intro, table { border-color: #bbb; }
+    nav.toc { display: none; }
+    .task { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Prueba 2 (recuperativa) — Programación III</h1>
+<p class="subtitle">Unity 2D · 7 tareas · 9.0 puntos</p>
+
+<div class="intro">
+  <p>Este proyecto de Unity ya funciona casi completo, pero un compañero de equipo dejó <strong>reportes de errores</strong>
+  y <strong>pedidos</strong> sin terminar. Tu trabajo es arreglar y completar el código.</p>
+  <p>Hay <strong>7 tareas</strong>. Cada tarea tiene <strong>su propia escena</strong> y no depende de las demás: puedes
+  hacerlas en el orden que quieras.</p>
+</div>
+
+<nav class="toc">
+  <a href="#reglas">Reglas</a>
+  <a href="#controles">Controles</a>
+  <a href="#mapa">Mapa del proyecto</a>
+  <a href="#t1">T1</a><a href="#t2">T2</a><a href="#t3">T3</a><a href="#t4">T4</a>
+  <a href="#t5">T5</a><a href="#t6">T6</a><a href="#t7">T7</a>
+</nav>
+
+<h2 id="reglas">Reglas</h2>
+<ul>
+  <li>Trabajo <strong>individual</strong>. Sin IA, sin internet, sin apuntes. <strong>El proyecto es tu referencia:</strong>
+    todo lo que necesitas ya aparece funcionando en algún script del proyecto.</li>
+  <li>Tienes <strong>una pregunta (comodín)</strong> para hacerle al profesor durante la prueba.</li>
+  <li><strong>Un commit por tarea</strong>, con el mensaje <code>T1</code>, <code>T2</code>, … <code>T7</code>. Al final, haz <strong>push</strong>.</li>
+</ul>
+<pre><code>git add -A
+git commit -m "T1"
+git push</code></pre>
+<div class="important">
+  <strong>Si el proyecto no compila, ninguna escena funciona.</strong> Antes de cada commit revisa que la Consola no tenga
+  errores de compilación (rojos) y que puedas entrar a Play.
+</div>
+<ul>
+  <li>En las tareas de <strong>Arreglar</strong> hay <strong>exactamente 1 error</strong>. Arréglalo donde está la causa,
+    no escondas el síntoma.</li>
+  <li>Puedes modificar scripts y, si lo necesitas, asignar referencias en el Inspector.</li>
+</ul>
+
+<h2 id="controles">Controles</h2>
+<table>
+  <tr><th>Acción</th><th>Tecla</th></tr>
+  <tr><td>Moverse</td><td><code>A</code> / <code>D</code> (o flechas)</td></tr>
+  <tr><td>Saltar</td><td><code>Espacio</code></td></tr>
+  <tr><td>Disparar</td><td><code>Enter</code> o clic izquierdo</td></tr>
+  <tr><td>Reaparecer (solo en T4)</td><td><code>R</code></td></tr>
+</table>
+
+<h2 id="mapa">Mapa del proyecto</h2>
+<pre><code>Assets/
+  Scenes/        Una escena por tarea: T1_Canon … T7_Impulso
+  Scripts/
+    Core/        GameEvents, GameItem, IDamagable, StateMachine
+    Player/      PlayerPhysics (jugador + máquina de estados), Bullet
+    Items/       Enemy (sierra), BlinkEnemy (abeja), Gem (gema), Key (llave)
+    Level/       Spikes, Cannon, Cannonball, MovingPlatform, Gate, DebugKeys
+    Score/       ScoreManager, KeyCounter
+  Prefabs/       Player, Bullet, Gem, Key, BlinkEnemy, Cannon, Cannonball, Gate, MovingPlatform,
+                 Ground, Wall, TargetFlag
+  Materials/     PlayerMaterial (fricción 0)
+  Settings/      URP e InputSystem_Actions
+  kenney_platformer-pack-remastered/   Sprites</code></pre>
+<p>Ideas que se usan en todo el proyecto:</p>
+<ul>
+  <li><code>GameEvents.OnTargetDestroyed</code> avisa cuando se destruye una gema o una llave. El dato que envía es un
+    <code>GameItem</code> (<code>GameItem.Gem</code> o <code>GameItem.Key</code>).</li>
+  <li><code>PlayerPhysics</code> controla al jugador con una <strong>máquina de estados</strong> (<code>StateMachine</code>):
+    cada estado tiene métodos de entrada, actualización y salida que se registran con <code>CreateState(...)</code>.</li>
+  <li>Las balas llaman a <code>Damage(...)</code> en todo lo que implemente <code>IDamagable</code>.</li>
+</ul>
+
+<h2 id="tareas">Tareas</h2>
+
+<section class="task" id="t1">
+  <div class="task-head">
+    <span class="badge fix">Arreglar</span>
+    <h3>T1 — Cañón</h3>
+    <span class="points">1.0 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T1_Canon</code> · Script relacionado: <code>Cannon.cs</code></p>
+  <blockquote>"El cañón me dispara, pero la bala cambia de velocidad: si estoy cerca del cañón va lenta, y si me alejo
+    va cada vez más rápido, tanto que casi no se ve."</blockquote>
+  <p>Hay 1 error. <span class="label">Resultado esperado:</span> la bala sale hacia el jugador y va siempre a la
+    <strong>misma velocidad</strong>, sin importar a qué distancia esté el jugador.</p>
+</section>
+
+<section class="task" id="t2">
+  <div class="task-head">
+    <span class="badge fix">Arreglar</span>
+    <h3>T2 — Intermitente</h3>
+    <span class="points">1.0 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T2_Intermitente</code> · Script relacionado: <code>BlinkEnemy.cs</code></p>
+  <blockquote>"Cuando le disparo a la abeja debería parpadear, pero desaparece y no vuelve nunca."</blockquote>
+  <p>Hay 1 error. <span class="label">Resultado esperado:</span> cuando una bala golpea la abeja, se pone roja y
+    parpadea (desaparece y aparece) 3 veces. Después vuelve a verse normal y se le puede volver a disparar.</p>
+</section>
+
+<section class="task" id="t3">
+  <div class="task-head">
+    <span class="badge fix">Arreglar</span>
+    <h3>T3 — Tabla de puntos</h3>
+    <span class="points">1.0 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T3_Tabla</code> · Script relacionado: <code>ScoreManager.cs</code></p>
+  <blockquote>"Cuando destruyo la gema el puntaje sube bien, pero cuando destruyo la llave aparece un error rojo en la
+    Consola y el puntaje no sube."</blockquote>
+  <p>Hay 1 error. <span class="label">Resultado esperado:</span> destruir la gema suma 3 puntos y destruir la llave
+    suma 1 (se ve en la Consola: <code>Puntaje: …</code>), sin errores.</p>
+</section>
+
+<section class="task" id="t4">
+  <div class="task-head">
+    <span class="badge fix">Arreglar</span>
+    <h3>T4 — Contador</h3>
+    <span class="points">1.0 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T4_Contador</code> · Script relacionado: <code>KeyCounter.cs</code> (está en el jugador)</p>
+  <p>En esta escena, la tecla <code>R</code> hace reaparecer al jugador en su posición inicial.</p>
+  <blockquote>"Las llaves se cuentan bien en la Consola (<code>Llaves destruidas: …</code>), pero si el jugador
+    reaparece (tecla R), las llaves que destruyo después ya no se cuentan."</blockquote>
+  <p>Hay 1 error. <span class="label">Resultado esperado:</span> cada llave destruida suma 1 al contador, también
+    después de reaparecer, todas las veces que se presione <code>R</code>.</p>
+</section>
+
+<section class="task" id="t5">
+  <div class="task-head">
+    <span class="badge complete">Completar</span>
+    <h3>T5 — Diagonal</h3>
+    <span class="points">1.5 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T5_Diagonal</code> · Script relacionado: <code>MovingPlatform.cs</code>
+    (método <code>MyMoveTowards</code>)</p>
+  <blockquote>"<code>MyMoveTowards</code> está vacío. Cada plataforma debe avanzar <strong>en línea recta</strong> hacia
+    su destino, a velocidad constante, y detenerse <strong>exactamente</strong> en él, sin pasarse."</blockquote>
+  <p><span class="label">Resultado esperado:</span> las dos plataformas avanzan en diagonal, en línea recta, y se
+    detienen justo debajo de su bandera. <strong>No uses <code>Vector2.MoveTowards</code> ni
+    <code>Mathf.MoveTowards</code>.</strong></p>
+</section>
+
+<section class="task" id="t6">
+  <div class="task-head">
+    <span class="badge complete">Completar</span>
+    <h3>T6 — Reja</h3>
+    <span class="points">1.5 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T6_Reja</code> · Script relacionado: <code>Gate.cs</code></p>
+  <blockquote>"Pedido: cuando se destruyan las 3 gemas, la reja debe desaparecer 1 segundo después. Las llaves no
+    cuentan."</blockquote>
+  <p><span class="label">Resultado esperado:</span> la reja desaparece 1 segundo después de destruir la
+    <strong>tercera gema</strong>, y el jugador puede pasar hasta la bandera. Destruir la llave no cuenta como gema.
+    Los valores de la reja (<code>gemsToOpen</code> y <code>openDelay</code>) ya están asignados.</p>
+</section>
+
+<section class="task" id="t7">
+  <div class="task-head">
+    <span class="badge create">Crear</span>
+    <h3>T7 — Impulso</h3>
+    <span class="points">2.0 pt</span>
+  </div>
+  <p class="meta">Escena: <code>T7_Impulso</code> · Script relacionado: <code>PlayerPhysics.cs</code></p>
+  <blockquote>"Pedido del diseñador: al presionar <strong>Shift izquierdo</strong> estando en el suelo, el jugador hace un
+    impulso: avanza rápido (3 veces su velocidad normal) hacia donde está mirando durante 0,2 segundos y se pone
+    celeste. Después vuelve a la normalidad."</blockquote>
+  <p class="label">Resultado esperado:</p>
+  <ol>
+    <li>El impulso es un <strong>nuevo estado</strong> de la máquina de estados del jugador.</li>
+    <li>Shift izquierdo activa el impulso, tanto si el jugador está quieto como si está caminando.</li>
+    <li>Durante el impulso avanza <strong>rápido hacia donde mira</strong>, aunque no se presione ninguna tecla de movimiento.</li>
+    <li>Durante el impulso se ve <strong>celeste</strong>, y al terminar vuelve a su <strong>color original</strong>.</li>
+    <li>Termina después de ~0,2 segundos y funciona <strong>cada vez</strong>, no solo la primera.</li>
+  </ol>
+  <p>La acción <code>Sprint</code> (Shift izquierdo) ya existe en <code>InputSystem_Actions</code>.</p>
+</section>
+
+<p class="total">Total: 9.0 puntos. Recuerda: un commit por tarea (<code>T1</code> … <code>T7</code>) y push al final.</p>
+
+</main>
+</body>
+</html>
