@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,7 @@ public enum PlayerState
     Jumping,
     Firing,
     Hurt,
+    Dashing,
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -20,6 +22,12 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] Rigidbody2D rigidBody2D;
     [SerializeField] float jumpSpeed;
     [SerializeField] float hurtJumpSpeed;
+    [Header("Dash / Sprint")]
+    [SerializeField] float dashSpeedMultiplier = 3.0f;
+    [SerializeField] float dashDuration = 0.2f;
+    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] Color dashColor = Color.cyan;
+    private Color color;
     [Header("Grounded")]
     [SerializeField] Vector2 groundCheckOffset;
     [SerializeField] Vector2 groundCheckSize;
@@ -28,6 +36,7 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] InputActionReference moveInput;
     [SerializeField] InputActionReference jumpInput;
     [SerializeField] InputActionReference fireInput;
+    [SerializeField] InputActionReference sprintInput;
     [Header("Bullet")]
     [SerializeField] Transform bulletSpawner;
     [SerializeField] Bullet bulletPrefab;
@@ -41,6 +50,7 @@ public class PlayerPhysics : MonoBehaviour
     bool canJump;
     int direction;
     Vector2 bulletSpawnerInitialPosition;
+    Coroutine dashRoutine;
 
     StateMachine stateMachine;
     State idleState;
@@ -48,6 +58,7 @@ public class PlayerPhysics : MonoBehaviour
     State jumpingState;
     State firingState;
     State hurtState;
+    State dashingState;
 
     void Awake()
     {
@@ -60,6 +71,7 @@ public class PlayerPhysics : MonoBehaviour
         jumpingState = CreateState(PlayerState.Jumping, JumpEnter, JumpUpdate, JumpExit);
         firingState = CreateState(PlayerState.Firing, FiringEnter, null, null);
         hurtState = CreateState(PlayerState.Hurt, HurtEnter, null, HurtExit);
+        dashingState = CreateState(PlayerState.Dashing, DashEnter, null, DashExit);
 
         stateMachine = new StateMachine();
         stateMachine.AddState(idleState);
@@ -67,6 +79,10 @@ public class PlayerPhysics : MonoBehaviour
         stateMachine.AddState(jumpingState);
         stateMachine.AddState(firingState);
         stateMachine.AddState(hurtState);
+        stateMachine.AddState(dashingState);
+        
+        color = spriteRenderer.color;
+        
     }
 
     void OnEnable()
@@ -107,6 +123,8 @@ public class PlayerPhysics : MonoBehaviour
         jumpInput.action.started += JumpStartedHandler;
 
         fireInput.action.started += BulletFiredHandler;
+        
+        sprintInput.action.started += SprintStartedHandler;
     }
 
     void IdleUpdate()
@@ -129,6 +147,8 @@ public class PlayerPhysics : MonoBehaviour
         jumpInput.action.started -= JumpStartedHandler;
 
         fireInput.action.started -= BulletFiredHandler;
+        
+        sprintInput.action.started -= SprintStartedHandler;
     }
 
     void MovementEnter()
@@ -137,6 +157,8 @@ public class PlayerPhysics : MonoBehaviour
         moveInput.action.canceled += CanceledMoveHandler;
 
         jumpInput.action.started += JumpStartedHandler;
+        
+        sprintInput.action.started += SprintStartedHandler;
 
         ReadMoveInput();
     }
@@ -152,6 +174,8 @@ public class PlayerPhysics : MonoBehaviour
         moveInput.action.canceled -= CanceledMoveHandler;
 
         jumpInput.action.started -= JumpStartedHandler;
+        
+        sprintInput.action.started -= SprintStartedHandler;
     }
 
     void JumpEnter()
@@ -180,6 +204,73 @@ public class PlayerPhysics : MonoBehaviour
 
         velocity.y = 0.0f;
         canJump = false;
+    }
+    
+    void SprintStartedHandler(InputAction.CallbackContext ctx)
+    {
+        if (isGrounded)
+        {
+            ChangeState(PlayerState.Dashing);
+        }
+    }
+    
+    void DashEnter()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = dashColor;
+        }
+
+        
+        horizontalSpeed = direction * speed * dashSpeedMultiplier;
+        velocity.x = horizontalSpeed;
+
+        if (dashRoutine != null)
+        {
+            StopCoroutine(dashRoutine);
+        }
+        dashRoutine = StartCoroutine(DashTimer());
+    }
+
+    void ResetDash()
+    {
+        if (dashRoutine != null)
+        {
+            StopCoroutine(dashRoutine);
+            dashRoutine = null;
+        }
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = color;
+        }
+
+        horizontalSpeed = 0.0f;
+        velocity.x = 0.0f;
+        
+        
+    }
+
+    void DashExit()
+    {
+        ResetDash();
+    }
+
+     IEnumerator DashTimer()
+    {
+        spriteRenderer.color = dashColor;
+        yield return new WaitForSeconds(dashDuration);
+        dashRoutine = null;
+
+        Vector2 moveVector = moveInput.action.ReadValue<Vector2>();
+        if (moveVector.x != 0.0f)
+        {
+            ChangeState(PlayerState.GroundedMovement);
+        }
+        else
+        {
+            ChangeState(PlayerState.Idle);
+        }
     }
 
     void FiringEnter()
