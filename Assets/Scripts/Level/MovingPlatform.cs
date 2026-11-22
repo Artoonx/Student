@@ -14,7 +14,7 @@ public class MovingPlatform : MonoBehaviour
 
     Vector2 MyMoveTowards(Vector2 current, Vector2 target, float maxDelta)
     {
-        // TODO
+        
         return current;
     }
 }
