@@ -14,7 +14,16 @@ public class MovingPlatform : MonoBehaviour
 
     Vector2 MyMoveTowards(Vector2 current, Vector2 target, float maxDelta)
     {
-        
-        return current;
+        float distance = Vector2.Distance(current, target);
+
+        if (distance <= maxDelta)
+        {
+            return target;
+        }
+
+        Vector2 direction = (target - current).normalized;
+        return current + direction * maxDelta;
     }
+       
+    
 }
